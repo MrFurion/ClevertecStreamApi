@@ -48,6 +48,7 @@ class TestTask1 {
 
         assertEquals(expectedOutput, resultOutput);
     }
+
     @Test
     public void testFailure() {
         List<Animal> testAnimals = Arrays.asList(

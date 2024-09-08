@@ -13,12 +13,14 @@ public class TestTask6 {
     @Test
     public void testSuccess() {
         List<Animal> animals = Util.getAnimals();
-        boolean aBoolean= animals.stream()
+        boolean aBoolean = animals.stream()
                 .allMatch(animal -> animal.getGender().equals("Male") || animal.getGender().equals("Female"));
         assertFalse(aBoolean);
     }
+
     @Test
-    public void testFailure() {List<Animal> animals = Util.getAnimals();
+    public void testFailure() {
+        List<Animal> animals = Util.getAnimals();
         boolean aBoolean = animals.stream()
                 .allMatch(animal -> animal.getGender().equals("Male") || animal.getGender().equals("Female"));
         assertNotEquals(aBoolean, true);

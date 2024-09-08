@@ -21,6 +21,7 @@ public class TestTask8 {
                 .max(Comparator.comparing(Animal::getAge));
         assertEquals(48, animal.get().getAge());
     }
+
     @Test
     public void testFailure() {
         List<Animal> animals = Util.getAnimals();

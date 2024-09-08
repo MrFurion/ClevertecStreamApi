@@ -31,7 +31,7 @@ public class TestTask9 {
                 .map(animal -> animal.getBread().toCharArray())
                 .mapToInt(charArray -> charArray.length)
                 .min();
-        if (minLength.isPresent()){
+        if (minLength.isPresent()) {
             int minAssert = minLength.getAsInt();
             assertNotEquals(minAssert, 0);
         }

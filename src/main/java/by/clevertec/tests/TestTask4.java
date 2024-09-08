@@ -18,6 +18,7 @@ public class TestTask4 {
                 .count();
         assertEquals(count, 476);
     }
+
     @Test
     public void testFailure() {
         List<Animal> animals = Util.getAnimals();

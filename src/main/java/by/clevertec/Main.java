@@ -92,8 +92,7 @@ public class Main {
         animals.stream()
                 .filter(animal -> animal.getAge() > 30 && animal.getOrigin().startsWith("A"))
                 .distinct()
-                .peek(animal -> out.println(animal.getOrigin()))
-                .toList();
+                .forEach(animal -> out.println(animal.getOrigin()));
     }
 
     public static void task4() {
@@ -176,8 +175,7 @@ public class Main {
                 })
                 .sorted(Comparator.comparing(Person::getRecruitmentGroup))
                 .limit(200)
-                .peek(person -> out.println(person.getLastName() + " " + person.getLastName()))
-                .toList();
+                .forEach(person -> out.println(person.getFirstName() + " " + person.getLastName()));
     }
 
     public static void task13() {
@@ -197,13 +195,12 @@ public class Main {
                             return age < 18 ? 0 : age > 62 ? 1 : 2;
                         }))
                 .limit(500)
-                .peek(entry -> out.println(entry.getValue().getFirstName() + " "
+                .forEach(entry -> out.println(entry.getValue().getFirstName() + " "
                         + entry.getValue().getLastName()
                         + " date of birth : "
                         + entry.getValue().getDateOfBirth()
                         + " local - "
-                        + entry.getKey()))
-                .toList();
+                        + entry.getKey()));
     }
 
     public static void task14() {
@@ -252,8 +249,7 @@ public class Main {
                 .filter(flower -> flower.isShadePreferred() || List.of("Glass", "Aluminium", "Steel").containsAll(flower.getFlowerVaseMaterial()))
                 .map(flower -> {
                     double waterCost = flower.getWaterConsumptionPerDay() * 5 * 365 * waterCostPerCubicMeter;
-                    double totalFlowerCost = flower.getPrice() + waterCost;
-                    return totalFlowerCost;
+                    return flower.getPrice() + waterCost;
                 })
                 .reduce(0.0, Double::sum);
         out.println("Total Cost: $" + totalCost);
@@ -263,8 +259,7 @@ public class Main {
         List<Student> students = Util.getStudents();
         students.stream()
                 .filter(student -> student.getAge() < 18)
-                .peek(student -> out.println(student.getSurname() + " " + student.getAge()))
-                .toList();
+                .forEach(student -> out.println(student.getSurname() + " " + student.getAge()));
     }
 
     public static void task17() {
@@ -320,7 +315,7 @@ public class Main {
 
         facultyStats.entrySet().stream()
                 .max(Comparator.comparingDouble(entry -> entry.getValue().getAverage()))
-                .ifPresent(entry -> System.out.println("Faculty: " + entry.getKey() + ", Average Exam 1 Score: " + entry.getValue().getAverage()));
+                .ifPresent(entry -> out.println("Faculty: " + entry.getKey() + ", Average Exam 1 Score: " + entry.getValue().getAverage()));
     }
 
     public static void task21() {
@@ -331,7 +326,6 @@ public class Main {
                         Collectors.counting()
                 ));
         groupCount.forEach((group, count) -> out.println("Group - " + group + ": count students - " + count));
-
     }
 
     public static void task22() {
