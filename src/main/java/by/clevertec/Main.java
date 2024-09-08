@@ -16,6 +16,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -48,7 +49,7 @@ public class Main {
         task16();
         task17();
         task18();
-        task19();
+        task19("C-2");
         task20();
         task21();
         task22();
@@ -260,37 +261,90 @@ public class Main {
 
     public static void task16() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        students.stream()
+                .filter(student -> student.getAge() < 18)
+                .peek(student -> out.println(student.getSurname() + " " + student.getAge()))
+                .toList();
     }
 
     public static void task17() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        students.stream()
+                .map(Student::getGroup)
+                .collect(Collectors.toSet())
+                .stream()
+                .sorted()
+                .forEach(out::println);
     }
 
     public static void task18() {
         List<Student> students = Util.getStudents();
-        List<Examination> examinations = Util.getExaminations();
-//        students.stream() Продолжить ...
+
+        students.stream()
+                .collect(Collectors.groupingBy(Student::getFaculty
+                        , Collectors.averagingInt(Student::getAge)))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .forEach(entry -> {
+                    double roundedAge = Math.round(entry.getValue() * 10) / 10.0;
+                    out.println("Faculty - " + entry.getKey() + ": age - " + roundedAge);
+                });
     }
 
-    public static void task19() {
+    public static void task19(String groupName) {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        List<Examination> examinations = Util.getExaminations();
+
+        students.stream()
+                .filter(student -> student.getGroup().equals(groupName))
+                .filter(student -> examinations.stream()
+                        .anyMatch(examination -> examination.getStudentId() == student.getId()
+                                && examination.getExam3() > 4))
+                .forEach(student -> out.println(student.getSurname()));
     }
 
     public static void task20() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        List<Examination> examinations = Util.getExaminations();
+        Map<String, DoubleSummaryStatistics> facultyStats = students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getFaculty,
+                        Collectors.summarizingDouble(student ->
+                                examinations.stream()
+                                        .filter(exam -> exam.getStudentId() == student.getId())
+                                        .mapToDouble(Examination::getExam1)
+                                        .average()
+                                        .orElse(0.0)
+                        )
+                ));
+
+        facultyStats.entrySet().stream()
+                .max(Comparator.comparingDouble(entry -> entry.getValue().getAverage()))
+                .ifPresent(entry -> System.out.println("Faculty: " + entry.getKey() + ", Average Exam 1 Score: " + entry.getValue().getAverage()));
     }
 
     public static void task21() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        Map<String, Long> groupCount = students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getGroup,
+                        Collectors.counting()
+                ));
+        groupCount.forEach((group, count) -> out.println("Group - " + group + ": count students - " + count));
+
     }
 
     public static void task22() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        Map<String, Integer> minAge = students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getFaculty,
+                        Collectors.collectingAndThen(
+                                Collectors.minBy(Comparator.comparingInt(Student::getAge)),
+                                optional -> optional.map(Student::getAge).orElse(null)
+                        )
+                ));
+        minAge.forEach((faculty, minAgeStudent) ->
+                out.println("Faculty: " + faculty + ", Minimum Age: " + minAgeStudent));
     }
 }
